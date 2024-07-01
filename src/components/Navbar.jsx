@@ -14,7 +14,8 @@ import { Menu, PhoneCall } from "lucide-react";
 import { Instagram } from "lucide-react";
 import { Twitter } from "lucide-react";
 import { Facebook } from "lucide-react";
-import { Link } from "react-scroll";
+
+import { Link } from 'react-router-dom';
 
 const Navbar = () => {
   const [isActive, setIsActive] = useState(false);
@@ -32,9 +33,9 @@ const Navbar = () => {
     >
       <div className="container flex gap-[2rem]  justify-between items-center">
         {isActive ? (
-          <img src="/public/logo.png" className="w-[7rem]" alt="" />
+         <Link to="/"><img src="/public/logo.png" className="w-[7rem]" alt="" /></Link> 
         ) : (
-          <img src="/public/logo-white.png" className="w-[7rem]" alt="" />
+          <Link to="/"><img src="/public/logo-white.png" className="w-[7rem]" alt="" /></Link> 
         )}
         <div
           className={`${
@@ -42,37 +43,26 @@ const Navbar = () => {
           } gap-[2rem] items-center hidden sm:flex`}
         >
           <Link
-            activeClass="active"
-            to="home"
-            smooth={true}
-            offset={-90}
+            
+            to="/"
+            
             className={`${
               isActive ? "  hover:border-primary" : " hover:border-white"
             } hover:border-b  font-semibold cursor-pointer`}
           >
             Home
           </Link>
+        
           <Link
             activeClass="active"
-            to="services"
+            to="reviews"
             smooth={true}
             offset={-90}
             className={`${
               isActive ? "  hover:border-primary" : " hover:border-white"
             } hover:border-b  font-semibold cursor-pointer`}
           >
-            Our Services
-          </Link>
-          <Link
-            activeClass="active"
-            to="review"
-            smooth={true}
-            offset={-90}
-            className={`${
-              isActive ? "  hover:border-primary" : " hover:border-white"
-            } hover:border-b  font-semibold cursor-pointer`}
-          >
-            Review
+            Reviews
           </Link>
 
           {isActive ? (
@@ -103,7 +93,7 @@ const Navbar = () => {
                 <div className="flex flex-col justify-start align-top items-start gap-2 mt-[2rem]">
                   <Link
                     activeClass="active"
-                    to="home"
+                    to="/"
                     smooth={true}
                     offset={-90}
                     className={`text-lg  font-semibold cursor-pointer`}
@@ -137,29 +127,10 @@ const Navbar = () => {
                       About
                     </Button>
                   </Link> */}
+               
                   <Link
                     activeClass="active"
-                    to="services"
-                    smooth={true}
-                    offset={-90}
-                    className={`${
-                      isActive
-                        ? "  hover:border-primary"
-                        : " hover:border-white"
-                    }  text-lg font-semibold cursor-pointer`}
-                  >
-                    {/* <Button
-                      className={buttonVariants({
-                        size: "lg",
-                        variant: "secondary",
-                      })}
-                    > */}
-                      Our Services
-                    {/* </Button> */}
-                  </Link>
-                  <Link
-                    activeClass="active"
-                    to="review"
+                    to="reviews"
                     smooth={true}
                     offset={-90}
                     className={`${
@@ -174,7 +145,7 @@ const Navbar = () => {
                         variant: "secondary",
                       })}
                     > */}
-                      Review
+                      Reviews
                     {/* </Button> */}
                   </Link>
                  

@@ -60,10 +60,10 @@ const FormReview = ({fetchData}) => {
   }
   
   return (
-    <section id="review" className="bg-white">
+    <section id="review" className="bg-primary">
       <div className="container   py-10 flex flex-col md:flex-row gap-5 justify-center items-center ">
         <div className="md:w-[50rem]">
-          <h1 className="text-6xl  font-bold text-primary mb-[1rem]">
+          <h1 className="text-6xl  font-bold text-white mb-[1rem]">
             Share Your Experience!
           </h1>
 
@@ -116,7 +116,7 @@ const FormReview = ({fetchData}) => {
           <CardFooter>
             {!isLoading? <Button className={buttonVariants({ size: "md"})} onClick={handleSubmit}>Submit</Button>: <Button className={buttonVariants({ size: "md",variant:"pressed" })} > <svg className="animate-spin h-5 w-5 mr-3 ..." viewBox="0 0 24 24">
             <Loader size={25} />
-  </svg> Sumbiting...</Button>
+  </svg> Sumbitting...</Button>
  
            
 }
