@@ -42,6 +42,11 @@ const FormReview = ({ fetchData }) => {
       toast.success("Review confirmed successfully!")
       SetisLoading(false)
       fetchData()
+      setFormData({
+              name: "",
+              star: "",
+              comment: "",
+            });
   }
   const handleSubmit = async(event) => {
     // event.preventDefault();
