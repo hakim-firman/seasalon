@@ -22,7 +22,7 @@ const Client = () => {
          
       </div>
       <img
-        src="/public/testimoni.png"
+        src="testimoni.png"
         className="w-[20rem] md:w-[25rem]  hidden md:block"
         alt=""
       />
