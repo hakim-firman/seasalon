@@ -48,6 +48,7 @@ const FormReview = ({ fetchData }) => {
               comment: "",
               date:format(date,'d-M-y')
             });
+            setRating(null);
   }
   const handleSubmit = async(event) => {
     // event.preventDefault();
