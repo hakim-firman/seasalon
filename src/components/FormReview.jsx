@@ -46,6 +46,7 @@ const FormReview = ({ fetchData }) => {
               name: "",
               star: "",
               comment: "",
+              date:format(date,'d-M-y')
             });
   }
   const handleSubmit = async(event) => {
