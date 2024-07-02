@@ -59,7 +59,7 @@ const Hero = () => {
           
         </div>
         <img
-          src="/public/ilustrasi.png"
+          src="./ilustrasi.png"
           className="w-[30rem] lg:w-[35rem] hidden md:block "
           alt=""
         />
