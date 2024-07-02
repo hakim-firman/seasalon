@@ -4,7 +4,7 @@
 
 1. **Clone repository**:
     ```bash
-    git clone https://github.com/yourusername/sea-salon.git
+    git clone https://github.com/helloworld-hkm/seasalon.git
     cd sea-salon
     ```
 
