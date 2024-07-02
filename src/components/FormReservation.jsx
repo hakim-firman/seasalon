@@ -24,15 +24,18 @@ import { Textarea } from "@/components/ui/textarea";
 import { auth, db } from "@/config/firebase";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, getDocs } from "firebase/firestore";
 import { BookDashed, CalendarIcon, Loader } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import toast, { Toaster } from "react-hot-toast";
 
+
 const FormReservation = ({fetchData}) => {
     const [user] = useAuthState(auth);
     const [date, setDate] = useState(new Date());
+    const [service,setService]=useState([])
+    const [branch,setBranch]=useState([])
     const ref = collection(db,"reservation");
     const [isLoading,setIsLoading]=useState(false)
     const [reservationData,setReservationData] = useState({
@@ -43,7 +46,21 @@ const FormReservation = ({fetchData}) => {
       userId:user.uid,
       date:format(date,'d-M-y'),
     })
-  
+    const getService = async () => {
+      setIsLoading(true);
+      try {
+        const snapshot = await getDocs(collection(db, "service")); 
+        const dataList = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setService(dataList);
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setIsLoading(false);
+      }
+    };
     const handleForm = (e)=>{
      const {name,value}=e.target
         setReservationData({
@@ -106,6 +123,36 @@ const FormReservation = ({fetchData}) => {
           service:value,
         })
       };
+      const handleBranch = (value) => {
+        setReservationData({ 
+          ...reservationData,
+          branch:value,
+        })
+      };
+
+      const getBranch = async () => {
+        setIsLoading(true);
+        try {
+          const snapshot = await getDocs(collection(db, "branch")); 
+          const dataList = snapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+          setBranch(dataList);
+          setIsLoading(false);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+          setIsLoading(false);
+        }
+      };
+
+      useEffect(() => {
+        if (user) {
+          getService();
+          getBranch();
+          console.log(service)
+        }
+      }, [user]); 
   return (
     <Card className=" border border-2 w-full border-black">
     <CardHeader>
@@ -133,17 +180,29 @@ const FormReservation = ({fetchData}) => {
           <SelectValue className="" placeholder="Choose Service"     />
         </SelectTrigger>
         <SelectContent className="brutalism bg-background">
-          <SelectItem value="Haircuts and Styling" >
-            Haircuts and Styling
+          {!isLoading&&service.map((i)=>(
+            <SelectItem key={i.id} value={i.service} >
+            {i.service}
           </SelectItem>
-          <SelectItem value="Manicure and Pedicure">
-          Manicure and Pedicure
-          </SelectItem>
-          <SelectItem value="Facial Treatments">
-            Facial Treatments
-          </SelectItem>
+          ))}
+        
         </SelectContent>
       </Select>
+      
+      <Select name="branch" onValueChange={(value)=>handleBranch(value)} >
+        <SelectTrigger className=" " >
+          <SelectValue className="" placeholder="Choose Branch"     />
+        </SelectTrigger>
+        <SelectContent className="brutalism bg-background">
+          {!isLoading&&branch.map((i)=>(
+            <SelectItem key={i.id} value={i.name} >
+            {i.name}
+          </SelectItem>
+          ))}
+        
+        </SelectContent>
+      </Select>
+
       <Select  onValueChange={(value)=>handleSession(value)} >
         <SelectTrigger className=" " >
           <SelectValue className="" placeholder="Choose Session"  />

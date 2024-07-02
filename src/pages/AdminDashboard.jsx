@@ -1,4 +1,6 @@
+import FormBranch from "@/components/FormBranch";
 import FormReservation from "@/components/FormReservation";
+import FormService from "@/components/FormServices";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -32,14 +34,14 @@ import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import toast, { Toaster } from "react-hot-toast";
 
-const Reservasi = () => {
+const AdminDashboard = () => {
   const [user]=useAuthState(auth)
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const fetchData = async () => {
     setIsLoading(true);
     try {
-      const snapshot = await getDocs(query(collection(db, "reservation"), where("userId", "==", user.uid))); 
+      const snapshot = await getDocs(collection(db, "service")); 
       const dataList = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
@@ -58,18 +60,18 @@ const Reservasi = () => {
     }
   }, [user]); 
   return (
-    <section id="review" className="bg-primary md:h-screen">
+    <section id="review" className="bg-primary ">
       <div className="container w-full  pt-[2rem]   flex flex-col md:flex-row-reverse gap-5 justify-between items-start ">
         <div className="w-full">
           <h1 className="text-6xl  font-bold text-secondary mb-[1rem]">
-            Book Your Service at Sea Salon
+            Manange Your Service
           </h1>
 
           {/* <h1 className="text-xl  font-normal text-black mb-[2rem]">
             Select your desired service and schedule your appointment now
           </h1> */}
           <h1 className="text-3xl  font-semibold text-white mb-[1rem]">
-            Your Booked Appointments :
+            List of Service :
           </h1>
           <div className="flex gap-2 flex-col">
            
@@ -86,19 +88,10 @@ const Reservasi = () => {
                 <CardContent>
                   <CardDescription className="text-lg flex flex-row gap-2 items-center">
                     <Clock/>
-                    <p>{i.session} at {i.branch}</p>
+                    <p>{i.duration} Hour / Session</p>
                   </CardDescription>
                 </CardContent>
-                <CardFooter className="text-primary text-lg gap-2 align-bottom ">
-                  <div className="flex flex-row gap-1 items-center justify-center">
-                  <User />
-                    <p>{i.name}</p>
-                  </div>
-                  <div className="flex flex-row gap-1 items-center justify-center">
-                  <CalendarIcon />
-                    <p>{i.date}</p>
-                  </div>
-                </CardFooter>
+               
               </Card>
             )):""
               ) : (
@@ -132,10 +125,14 @@ const Reservasi = () => {
             )):"loading"} */}
           </div>
         </div>
-        <FormReservation fetchData={fetchData} />
+        <div className="flex flex-col gap-2 w-full">
+        <FormService fetchData={fetchData} />
+        <FormBranch fetchData={fetchData} />
+        </div>
+       
       </div>
     </section>
   );
 };
 
-export default Reservasi;
+export default AdminDashboard;

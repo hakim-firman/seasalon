@@ -16,6 +16,7 @@ import { useEffect, useState } from "react";
 import Login from './pages/Login';
 import Register from "@/pages/Register.jsx";
 import NotFound from './pages/NotFound';
+import AdminDashboard from "./pages/AdminDashboard.jsx";
 
 
 
@@ -54,7 +55,7 @@ function App() {
       
       <Routes>
             <Route path="/" element={<Home/>}/>
-            <Route path="/reservation" element={user ? <Reservasi/> : <Navigate to="/login" />}/> 
+            <Route path="/reservation" element={user ? (userRole=='admin'?<AdminDashboard/>:<Reservasi/>) : <Navigate to="/login" />}/> 
          
             <Route path="/reviews" element={<Reviews />} />
             
