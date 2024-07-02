@@ -127,7 +127,7 @@ const Navbar = ({userRole}) => {
             <SheetHeader>
               <SheetTitle>
                 {" "}
-                <img src="/public/logo.png" className="w-[7rem]" alt="" />
+                <img src="logo.png" className="w-[7rem]" alt="" />
               </SheetTitle>
               <SheetDescription>
                 <div className="flex flex-col justify-start align-top items-start gap-2 mt-[2rem]">

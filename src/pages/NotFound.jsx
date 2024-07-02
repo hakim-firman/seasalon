@@ -12,7 +12,7 @@ const NotFound = () => {
         
       </div>
       <img
-        src="/public/noFound.png"
+        src="noFound.png"
         className="w-[20rem] lg:w-[25rem] hidden md:block "
         alt=""
       />

@@ -59,7 +59,7 @@ function App() {
             <Route path="/reviews" element={<Reviews />} />
             
             {<Route path="/Login" element={!user?<Login />:<Navigate to={"/"}/>} />}
-            {<Route path="/Register" element={!user?<Login />:<Navigate to={"/"}/>} />}
+            {<Route path="/register" element={!user?<Register />:<Navigate to={"/"}/>} />}
 
             <Route path="/*" element={<NotFound/>}/> 
           </Routes>

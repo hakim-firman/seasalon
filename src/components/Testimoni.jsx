@@ -52,7 +52,7 @@ const Testimoni = ({ isLoading,SetisLoading,fetchData,data,setData,filterData}) 
           Hear from Our Delighted Clients
         </h1>
         <img
-          src="/public/review.png"
+          src="review.png"
           className="w-[20rem] md:w-[65rem]  hidden md:block"
           alt=""
         />

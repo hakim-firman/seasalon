@@ -22,7 +22,7 @@ const About = () => {
         </h1>
       </div>
       <img
-        src="/public/about.png"
+        src="about.png"
         className="w-[20rem] md:w-[25rem]  hidden md:block"
         alt=""
       />

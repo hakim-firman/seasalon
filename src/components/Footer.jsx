@@ -8,7 +8,7 @@ const Footer = () => {
   return (
     <footer className="bg-primary">
     <div className="container py-[2rem] flex flex-col sm:flex-row  justify-between items-start sm:items-center">
-      <img src="/public/logo-white.png" className="h-[5rem]" alt="" />
+      <img src="logo-white.png" className="h-[5rem]" alt="" />
       <div className="text-white font-semibold font-lg ">
         <h1 className="text-2xl font-bold">Contact</h1>
         <div className="flex gap-2 items-center justify-center">
