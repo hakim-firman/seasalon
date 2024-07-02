@@ -41,6 +41,7 @@ const FormReview = ({ fetchData }) => {
     const addData = await addDoc(ref,formData)
       toast.success("Review confirmed successfully!")
       SetisLoading(false)
+      fetchData()
   }
   const handleSubmit = async(event) => {
     // event.preventDefault();
@@ -52,20 +53,20 @@ const FormReview = ({ fetchData }) => {
 
 
     addData()
-    axios
-      .post("https://668160a404acc3545a0685a8.mockapi.io/comment", formData)
-      .then((response) => {
-        toast.success("Review submitted successfully!");
-        SetisLoading(false);
-        setFormData({
-          name: "",
-          star: "",
-          comment: "",
-        });
+    // axios
+    //   .post("https://668160a404acc3545a0685a8.mockapi.io/comment", formData)
+    //   .then((response) => {
+    //     toast.success("Review submitted successfully!");
+    //     SetisLoading(false);
+    //     setFormData({
+    //       name: "",
+    //       star: "",
+    //       comment: "",
+    //     });
        
-        fetchData();
-        setRating(null);
-      })
+    //     fetchData();
+    //     setRating(null);
+    //   })
       .catch((error) => {
         console.error("Error:", error);
       });
