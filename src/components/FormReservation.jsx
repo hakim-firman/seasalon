@@ -34,6 +34,7 @@ const FormReservation = ({fetchData}) => {
     const [user] = useAuthState(auth);
     const [date, setDate] = useState(new Date());
     const ref = collection(db,"reservation");
+    const [isLoading,setIsLoading]=useState(false)
     const [reservationData,setReservationData] = useState({
       name:"",
       phone:"",
@@ -79,16 +80,20 @@ const FormReservation = ({fetchData}) => {
   
     const sessions = generateSessions(9, 21); // Generating sessions from 9 AM to 2 PM
     const addReservation = async()=>{
+      setIsLoading(true)
         try {
           const {name,phone,service,session,date} = reservationData
           if (!name || !phone || !service || !session || !date) {
             toast.error("All fields are mandatory. Please complete them")
+            setIsLoading(false)
           }else{
           const addData = await addDoc(ref,reservationData)
           toast.success("Reservation confirmed successfully!")
+          setIsLoading(false)
         }
         } catch (error) {
           toast.error(`Failed to save your reservation. ${error.code}. Please try again later.`)
+          setIsLoading(false)
         }
       }
     const handleSubmit = async()=>{
@@ -175,13 +180,15 @@ const FormReservation = ({fetchData}) => {
       </Popover>
     </CardContent>
     <CardFooter>
-      <Button
-        className={buttonVariants({ size: "md", variant: "primary" })}
-        onClick={handleSubmit}
-      >
-        Confirm
-      </Button>
-      <Button
+      {!isLoading?(
+         <Button
+         className={buttonVariants({ size: "md", variant: "primary" })}
+         onClick={handleSubmit}
+       >
+         Confirm
+       </Button>
+      ):(
+        <Button
         className={buttonVariants({ size: "md", variant: "pressed" })}
       >
         {" "}
@@ -194,6 +201,9 @@ const FormReservation = ({fetchData}) => {
         Prosessing...
       </Button>
 
+      )}
+     
+      
    
     </CardFooter>
   </Card>
