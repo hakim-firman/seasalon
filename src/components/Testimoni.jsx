@@ -72,7 +72,7 @@ const Testimoni = ({ isLoading,SetisLoading,fetchData,data,setData,filterData}) 
                     <p>{i.name}</p>
                     <Star size={20} />
                     <span> {i.star}</span>
-                    <p>{formatDate(i.createdAt)}</p>
+                    <p>{i.date}</p>
                   </CardFooter>
                 </Card>
               ))}

@@ -14,14 +14,19 @@ import { Input } from "./ui/input";
 import { Loader, LoaderCircle, Star } from "lucide-react";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
+import { addDoc, collection } from "firebase/firestore";
+import { db } from "@/config/firebase";
+import { format } from "date-fns";
 const FormReview = ({ fetchData }) => {
   const [rating, setRating] = useState(null);
   const [hover, setHover] = useState(null);
+  const [date, setDate] = useState(new Date());
   const [isLoading, SetisLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     star: "",
     comment: "",
+    date:format(date,'d-M-y')
   });
 
   const handleInputChange = (e) => {
@@ -31,13 +36,22 @@ const FormReview = ({ fetchData }) => {
       [name]: value,
     });
   };
-  const handleSubmit = (event) => {
+  const addData=async()=>{
+    const ref = collection(db,"review");
+    const addData = await addDoc(ref,formData)
+      toast.success("Review confirmed successfully!")
+      SetisLoading(false)
+  }
+  const handleSubmit = async(event) => {
     // event.preventDefault();
     if (formData.name === "" || formData.comment === "") {
       toast.error("Name and Comment cannot be empty");
       return;
     }
     SetisLoading(true);
+
+
+    addData()
     axios
       .post("https://668160a404acc3545a0685a8.mockapi.io/comment", formData)
       .then((response) => {
@@ -48,6 +62,7 @@ const FormReview = ({ fetchData }) => {
           star: "",
           comment: "",
         });
+       
         fetchData();
         setRating(null);
       })
