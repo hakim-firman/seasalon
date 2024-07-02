@@ -22,7 +22,7 @@ const Testimoni = ({ isLoading,SetisLoading,fetchData,data,setData,filterData}) 
 //     );
 //     setData(response.data);
 //     SetisLoading(false);
-//     console.log(data);
+//    
 //   } catch (error) {
 //     console.error("Error fetching data: ", error);
 //   }

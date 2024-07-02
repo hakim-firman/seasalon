@@ -1,8 +1,10 @@
+import FormReservation from "@/components/FormReservation";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
   Card,
   CardContent,
+  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -21,14 +23,40 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { auth, db } from "@/config/firebase";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
-import { BookDashed, CalendarIcon, Loader } from "lucide-react";
-import React, { useState } from "react";
-import { Toaster } from "react-hot-toast";
+import { addDoc, collection, getDoc, getDocs, query, where } from "firebase/firestore";
+import { BookDashed, CalendarIcon, Clock, Loader, User } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
+import toast, { Toaster } from "react-hot-toast";
 
 const Reservasi = () => {
-  const [date, setDate] = useState();
+  const [user]=useAuthState(auth)
+  const [data, setData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const fetchData = async () => {
+    setIsLoading(true);
+    try {
+      const snapshot = await getDocs(query(collection(db, "reservation"), where("userId", "==", user.uid))); 
+      const dataList = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setData(dataList);
+      setIsLoading(false);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (user) {
+      fetchData();
+    }
+  }, [user]); 
   return (
     <section id="review" className="bg-primary md:h-screen">
       <div className="container w-full  pt-[2rem]   flex flex-col md:flex-row-reverse gap-5 justify-between items-start ">
@@ -44,134 +72,69 @@ const Reservasi = () => {
             Your Booked Appointments :
           </h1>
           <div className="flex gap-2 flex-col">
-            <Card className="brutalism brutalism-hover  flex flex-col justify-between">
-              <CardHeader className="text-destructive">
-                <CardTitle>
-                  {" "}
-                  <BookDashed size={30} className="inline" /> You haven't booked
-                  any appointments yet.
-                </CardTitle>
-              </CardHeader>
-            </Card>
-            <Card className="brutalism brutalism-hover  flex flex-col justify-between">
-              <CardHeader>
-                <CardTitle>x</CardTitle>
-              </CardHeader>
+           
 
-              <CardFooter className="text-primary text-sm gap-2 align-bottom ">
-                <p>x</p>
+            {data.length !== 0 ? (
+             !isLoading?data.map((i) => (
+              <Card
+                className="brutalism brutalism-hover  flex flex-col justify-between"
+                key={i.id}
+              >
+                <CardHeader>
+                  <CardTitle>{i.service} at Cabang</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription className="text-lg flex flex-row gap-2 items-center">
+                    <Clock/>
+                    <p>{i.session}</p>
+                  </CardDescription>
+                </CardContent>
+                <CardFooter className="text-primary text-lg gap-2 align-bottom ">
+                  <div className="flex flex-row gap-1 items-center justify-center">
+                  <User />
+                    <p>{i.name}</p>
+                  </div>
+                  <div className="flex flex-row gap-1 items-center justify-center">
+                  <CalendarIcon />
+                    <p>{i.date}</p>
+                  </div>
+               
+                 
+                </CardFooter>
+              </Card>
+            )):""
+              ) : (
+                <Card className="brutalism brutalism-hover  flex flex-col justify-between">
+                <CardHeader className="text-destructive">
+                  <CardTitle>
+                    {" "}
+                    <BookDashed size={30} className="inline" /> You haven't booked
+                    any appointments yet.
+                  </CardTitle>
+                </CardHeader>
+              </Card>
+            )}
 
-                <span> x</span>
-                <p>x</p>
-              </CardFooter>
-            </Card>
+            {/* {!isLoading?data.map((i) => (
+              <Card
+                className="brutalism brutalism-hover  flex flex-col justify-between"
+                key={i.id}
+              >
+                <CardHeader>
+                  <CardTitle>ss</CardTitle>
+                </CardHeader>
+
+                <CardFooter className="text-primary text-sm gap-2 align-bottom ">
+                  <p>x</p>
+
+                  <span> x</span>
+                  <p>x</p>
+                </CardFooter>
+              </Card>
+            )):"loading"} */}
           </div>
         </div>
-
-        <Card className=" border border-2 w-full border-black">
-          <CardHeader>
-            <CardTitle> Reservation Form</CardTitle>
-            {/* <CardDescription>Card Description</CardDescription> */}
-          </CardHeader>
-          <CardContent className="flex flex-col  gap-2 items-start">
-            <Input
-              type="name"
-              name="name"
-              //   value={formData.name}
-              placeholder="Your Name"
-              //   onChange={}
-            />
-
-            <Input
-              type="name"
-              name="phone"
-              //   value={formData.name}
-              placeholder="Your Number"
-              //   onChange={}
-            />
-            <Select>
-              <SelectTrigger className=" ">
-                <SelectValue className="" placeholder="Choose Service" />
-              </SelectTrigger>
-              <SelectContent className="brutalism bg-background">
-                <SelectItem value="Haircuts and Styling">
-                  Haircuts and Styling
-                </SelectItem>
-                <SelectItem value=" Haircuts and Styling">
-                Haircuts and Styling
-                </SelectItem>
-                <SelectItem value="Facial Treatments">
-                  Facial Treatments
-                </SelectItem>
-              </SelectContent>
-            </Select>
-         
-
-            <Input
-              type="name"
-              name="time"
-              //   value={formData.name}
-              placeholder="time"
-              //   onChange={}
-            />
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant={"outline"}
-                  className={cn(
-                    "w-full justify-start text-left font-normal",
-                    !date && "text-muted-foreground"
-                  )}
-                >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  {date ? format(date, "PPP") : <span>Pick a date</span>}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0 brutalism">
-                <Calendar
-                  mode="single"
-                  selected={date}
-                  onSelect={setDate}
-                  initialFocus
-                />
-              </PopoverContent>
-            </Popover>
-          </CardContent>
-          <CardFooter>
-            <Button
-              className={buttonVariants({ size: "md", variant: "primary" })}
-            >
-              Confirm
-            </Button>
-            <Button
-              className={buttonVariants({ size: "md", variant: "pressed" })}
-            >
-              {" "}
-              <svg
-                className="animate-spin h-5 w-5 mr-3 ..."
-                viewBox="0 0 24 24"
-              >
-                <Loader size={25} />
-              </svg>{" "}
-              Prosessing...
-            </Button>
-
-            <Toaster
-              position="top-right"
-              gutter={-50}
-              toastOptions={{
-                className: "border border-black   mx-4 ",
-                style: {
-                  border: "2px solid black",
-                  padding: "10px",
-                  color: "black",
-                  marginTop: "5rem",
-                  boxShadow: "4px 4px 0 0 rgb(0, 0, 0)",
-                },
-              }}
-            />
-          </CardFooter>
-        </Card>
+        <FormReservation fetchData={fetchData} />
       </div>
     </section>
   );

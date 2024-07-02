@@ -1,6 +1,9 @@
 // import SearchBar from './SearchBar'
 import { Button, buttonVariants } from "@/components/ui/button";
 import { useEffect, useState } from "react";
+import { auth, db, googleProvider } from "@/config/firebase.js";
+import { signInWithPopup } from "firebase/auth";
+import { useAuthState } from "react-firebase-hooks/auth";
 // import { Link } from "react-router-dom";
 import {
   Sheet,
@@ -15,16 +18,30 @@ import { Instagram } from "lucide-react";
 import { Twitter } from "lucide-react";
 import { Facebook } from "lucide-react";
 
-import { Link } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import { FirebaseError } from "firebase/app";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { signInWithGoogle } from "@/Utils/SignInWithGoogle";
 
-const Navbar = () => {
+const Navbar = ({userRole}) => {
   const [isActive, setIsActive] = useState(false);
+  const [user] = useAuthState(auth);
+  const navigate = useNavigate();
   useEffect(() => {
     const scroll = () => {
       window.scrollY > 50 ? setIsActive(true) : setIsActive(false);
     };
     window.addEventListener("scroll", scroll);
   });
+
+ 
+
+  const handleLogout = () => {
+    auth.signOut();
+    toast.success("You have successfully logged out");
+    navigate("/");
+  };
   return (
     <div
       className={`${
@@ -32,10 +49,15 @@ const Navbar = () => {
       } p-[1rem] z-50 border-b-2 border-primary sticky top-0 `}
     >
       <div className="container flex gap-[2rem]  justify-between items-center">
+        
         {isActive ? (
-         <Link to="/"><img src="/public/logo.png" className="w-[7rem]" alt="" /></Link> 
+          <Link to="/">
+            <img src="/public/logo.png" className="w-[7rem]" alt="" />
+          </Link>
         ) : (
-          <Link to="/"><img src="/public/logo-white.png" className="w-[7rem]" alt="" /></Link> 
+          <Link to="/">
+            <img src="/public/logo-white.png" className="w-[7rem]" alt="" />
+          </Link>
         )}
         <div
           className={`${
@@ -43,16 +65,14 @@ const Navbar = () => {
           } gap-[2rem] items-center hidden sm:flex`}
         >
           <Link
-            
             to="/"
-            
             className={`${
               isActive ? "  hover:border-primary" : " hover:border-white"
             } hover:border-b  font-semibold cursor-pointer`}
           >
             Home
           </Link>
-        
+
           <Link
             activeClass="active"
             to="reviews"
@@ -64,23 +84,43 @@ const Navbar = () => {
           >
             Reviews
           </Link>
+          {user&&(
+             <Link
+             activeClass="active"
+             to="reservation"
+             smooth={true}
+             offset={-90}
+             className={`${
+               isActive ? "  hover:border-primary" : " hover:border-white"
+             } hover:border-b  font-semibold cursor-pointer`}
+           >
+             Dasboard
+           </Link>
+          )}
+         
 
-          {isActive ? (
+          {user ? (
             <Button
-              className={buttonVariants({ size: "lg", variant: "primary" })}
+              className={buttonVariants({ size: "lg", variant: "destructive" })}
+              onClick={handleLogout}
             >
-              Login
+              Logout
             </Button>
           ) : (
+            <Link to={"/login"}>
             <Button
               className={buttonVariants({ size: "lg", variant: "secondary" })}
+              
             >
               Login
             </Button>
+            </Link>
           )}
         </div>
         <Sheet className="">
-          <SheetTrigger className={`block sm:hidden brutalism  bg-white rounded-sm p-2`}>
+          <SheetTrigger
+            className={`block sm:hidden brutalism  bg-white rounded-sm p-2`}
+          >
             <Menu size={25} className=" " />
           </SheetTrigger>
           <SheetContent>
@@ -104,7 +144,7 @@ const Navbar = () => {
                         variant: "secondary",
                       })}
                     > */}
-                      Home
+                    Home
                     {/* </Button> */}
                   </Link>
                   {/* <Link
@@ -127,7 +167,7 @@ const Navbar = () => {
                       About
                     </Button>
                   </Link> */}
-               
+
                   <Link
                     activeClass="active"
                     to="reviews"
@@ -145,19 +185,48 @@ const Navbar = () => {
                         variant: "secondary",
                       })}
                     > */}
-                      Reviews
+                    Reviews
                     {/* </Button> */}
                   </Link>
-                 
+                  {user && (
+                    <Link
+                      activeClass="active"
+                      to="reservation"
+                      smooth={true}
+                      offset={-90}
+                      className={`${
+                        isActive
+                          ? "  hover:border-primary"
+                          : " hover:border-white"
+                      } text-lg  font-semibold cursor-pointer`}
+                    >
+                      Dashboard
+                    </Link>
+                  )}
+
+                  {user ? (
                     <Button
                       className={buttonVariants({
                         size: "lg",
-                        variant: "primary",
+                        variant: "destructive",
                       })}
+                      onClick={handleLogout}
+                    >
+                      Logout
+                    </Button>
+                  ) : (
+                    <Link to={"/login"}>
+                    <Button
+                      className={buttonVariants({
+                        size: "lg",
+                        variant: "secondary",
+                      })}
+                      
                     >
                       Login
                     </Button>
-           
+                    </Link>
+                  )}
                 </div>
               </SheetDescription>
             </SheetHeader>

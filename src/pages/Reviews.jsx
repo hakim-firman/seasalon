@@ -12,7 +12,7 @@ const Reviews = () => {
       try {
         const response = await axios.get('https://668160a404acc3545a0685a8.mockapi.io/comment');
         setData(response.data);
-        console.log(data)
+       
         SetisLoading(false)
       } catch (error) {
         console.error('Error fetching data:', error);
