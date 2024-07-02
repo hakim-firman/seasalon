@@ -52,11 +52,11 @@ const Navbar = ({userRole}) => {
         
         {isActive ? (
           <Link to="/">
-            <img src="./logo.png" className="w-[7rem]" alt="" />
+            <img src="logo.png" className="w-[7rem]" alt="" />
           </Link>
         ) : (
           <Link to="/">
-            <img src="./logo-white.png" className="w-[7rem]" alt="" />
+            <img src="logo-white.png" className="w-[7rem]" alt="" />
           </Link>
         )}
         <div
