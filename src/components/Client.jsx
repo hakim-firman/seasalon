@@ -1,4 +1,5 @@
 import React from 'react'
+import testimoni from '../../public/testimoni.png'
 import { Button, buttonVariants } from '@/components/ui/button';
 import {  MessageCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -22,7 +23,7 @@ const Client = () => {
          
       </div>
       <img
-        src="testimoni.png"
+        src={testimoni}
         className="w-[20rem] md:w-[25rem]  hidden md:block"
         alt=""
       />
